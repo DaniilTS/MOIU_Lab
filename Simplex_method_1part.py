@@ -4,8 +4,7 @@ from Simplex_method_2part import simplex_method_second_part
 
 
 def basis_matrix(a, jb):
-    Ab = [[element for j, element in enumerate(row) if j + 1 in jb] for row in list(a)]
-    return Ab
+    return [[element for j, element in enumerate(row) if j + 1 in jb] for row in list(a)]
 
 
 def Jb_contains_indexes_more_n(Jb, n):
@@ -58,6 +57,7 @@ def simplex_method_first_part(A, b):
     not_base_indexes = list(set(J) - set(Jb))
     print('не базисные индексы:', not_base_indexes)
 
+    counter = 0
     isTrue, index, j_k = Jb_contains_indexes_more_n(Jb, n)
     while isTrue:
         rel_index = j_k - n
@@ -74,25 +74,25 @@ def simplex_method_first_part(A, b):
             A = np.delete(A, rel_index)
             A_extended = np.delete(A_extended, rel_index)
             Jb.remove(Jb[index])
+            counter = counter + 1
 
         isTrue, index, j_k = Jb_contains_indexes_more_n(Jb, n)
 
     for index, element in enumerate(optimal_plan):
-        if element == 0:
+        if element == 0 and counter != 0:
             optimal_plan = np.delete(optimal_plan, index)
+            counter - 1
             break
 
     return optimal_plan
 
 
-print('Оптимальный план:', simplex_method_first_part(A=np.array([[-1., 5., 1., 0., 0.],
-                                                                 [1., 1., 0., 1., 0.],
-                                                                 [0., 6., 1., 1., 0.]]),
-                                                     b=np.array([5., 4., 9.])))
+# print('Оптимальный план:', simplex_method_first_part(A=np.array([[-3., 7., 1, 0., 0.],
+#                                                                  [7., 5., 0., 1., 0.],
+#                                                                  [0., -1., 0., 0., 1.]]),
+#                                                      b=np.array([14., 42., -4.])))
 # VAR 25
 # [[-3., 7., 1, 0., 0.],
-#  [7., 5., 0., 1., 0.],
-#  [0., -1., 0., 0., 1.]]
 # [14., 42., -4.]
 
 #  VAR 19

@@ -1,5 +1,4 @@
 import numpy as np
-import random
 
 
 def solve_transport_problem(supply_vector, applications_vector, cost_matrix):
@@ -15,7 +14,7 @@ def solve_transport_problem(supply_vector, applications_vector, cost_matrix):
         print('Jb:\n', Jb)
         not_Jb = list(set(J) - set(Jb))
 
-        return second_phase(x, Jb, not_Jb, Jb_elements, cost_matrix)
+        return second_phase(x, J, Jb, not_Jb, Jb_elements, cost_matrix)
 
     else:
         print('условие баланса не выполнено, нет смысла решать задачу')
@@ -52,43 +51,50 @@ def first_phase(a, b, c):
     return x, Jb, Jb_elements
 
 
-def second_phase(x, Jb, not_Jb, Jb_elements, c):
-    left_part = get_left_part(x, Jb)
-    right_part = get_right_part(c, Jb)
-    solution = np.linalg.solve(left_part, right_part)
-    print('System solution:\n', solution)
+def second_phase(x, J, Jb, not_Jb, Jb_elements, c):
+    while True:
+        left_part = get_left_part(x, Jb)
+        right_part = get_right_part(c, Jb)
+        solution = np.linalg.solve(left_part, right_part)
+        print('System solution:\n', solution)
 
-    middle = int((len(solution) / 2))
-    u = solution[0:middle]
-    v = solution[middle:len(solution)]
+        middle = int((len(solution) / 2))
+        u = solution[0:middle]
+        v = solution[middle:len(solution)]
 
-    result, new_Jb_index = is_optimal_condition(c, u, v, not_Jb)
-    if result:
-        print('X:\n', x)
-        return x
+        result, new_Jb_index = is_optimal_condition(c, u, v, not_Jb)
+        if result:
+            print('X:\n', x)
+            return x
 
-    Jb.insert(0, new_Jb_index)  # add new base position
+        Jb.insert(0, new_Jb_index)  # add new base position
 
-    delete_extra_rows_columns(x, Jb)
-    add_subtract_tau(Jb_elements)
+        delete_extra_rows_columns(x, Jb)
+        add_subtract_tau(Jb_elements)
+        print('индексы базисных элементов:', Jb)
 
-    print(Jb)
-    m, n = x.shape
+        m, n = x.shape
 
-    for i in range(m):
-        for j in range(n):
-            if (i, j) in Jb and x[i, j] == 0:
-                Jb.remove((i, j))
+        for index, elem in enumerate(Jb_elements):
+            if elem == 0:
+                Jb_elements.pop(index)
+                Jb.pop(index)
                 break
-    print(Jb)
-########################
-    index = 0
-    for i in range(m):
-        for j in range(n):
-            if (i, j) in Jb:
-                x[i, j] = Jb_elements[index]
-                index = index + 1
-    print(x)
+
+        print('элементы на базисных индексах:', Jb_elements)
+        print('базисные индексы:', Jb)
+
+        counter = 0
+        for i in range(n):
+            for j in range(m):
+                if (i, j) in Jb:
+                    x[i, j] = Jb_elements[counter]
+                    counter = counter + 1
+                else:
+                    x[i, j] = 0
+        print(x)
+
+        not_Jb = list(set(J) - set(Jb))
 
 
 def get_left_part(x, Jb):
@@ -158,11 +164,11 @@ def add_subtract_tau(Jb_elements):
         Jb_elements[i] = Jb_elements[i] - (tau * minus)
         minus = minus * -1
 
-    print(Jb_elements)
+    print('новые элементы на базисных индексах:', Jb_elements)
 
 
-solve_transport_problem(supply_vector=[100, 300, 300],
+print(solve_transport_problem(supply_vector=[100, 300, 300],
                         applications_vector=[300, 200, 200],
                         cost_matrix=np.array([[8, 4, 1],
                                               [8, 4, 3],
-                                              [9, 7, 5]]))
+                                              [9, 7, 5]])))
