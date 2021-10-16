@@ -7,7 +7,7 @@ C = [[0, 0, 0],
      [0, 0, 0]]
 
 
-def nord_west_method(A, b):
+def SZ_method(A, b):
     n = len(b)
     m = len(A)
 
@@ -31,7 +31,7 @@ def nord_west_method(A, b):
     return X, J_b
 
 
-def get_v_u(C, I_b):
+def Get_VU(C, I_b):
     m = len(C)
     n = len(C[0])
     A = [[0] * (n + m) for _ in range(n + m)]
@@ -48,16 +48,17 @@ def get_v_u(C, I_b):
     return x[:m], x[m:]
 
 
-def rebuild_J_b(m, n, J_b):
+def new_Jb(m, n, J_b):
     J_bh, J_bv = [[] for _ in range(m)], [[] for _ in range(n)]
 
     for i, j in J_b:
         J_bh[i].append(j)
         J_bv[j].append(i)
+
     return J_bh, J_bv
 
 
-def i_j_generator(n, m):
+def gen(n, m):
     for i in range(n):
         for j in range(m):
             yield i, j
@@ -79,7 +80,7 @@ def transport_task(a, b, C):
     print("b:", b)
     print("c: ", C)
 
-    X, J_b = nord_west_method(a, b)
+    X, J_b = SZ_method(a, b)
     print("Базисный план: ", X)
     print("Множество клеток: ", J_b)
 
@@ -87,9 +88,9 @@ def transport_task(a, b, C):
     iteration = 1
     while True:
         print("ИТЕРАЦИЯ ", iteration)
-        u, v = get_v_u(C, J_b)
+        u, v = Get_VU(C, J_b)
 
-        for i, j in i_j_generator(m, n):
+        for i, j in gen(m, n):
             if u[i] + v[j] > C[i][j]:
                 J_b.append((i, j))
                 break
@@ -102,7 +103,7 @@ def transport_task(a, b, C):
             return
         print("\nРасширенное множество клеток: ", J_b)
 
-        J_bh, J_bv = rebuild_J_b(m, n, J_b)
+        J_bh, J_bv = new_Jb(m, n, J_b)
         print("Клетки в местах, где цикл поворачивает на 90 градусов: ", J_bh)
         loop = [(i, j)]
         deleted = True

@@ -1,11 +1,14 @@
 import numpy as np
 
-A = np.matrix([[1, -3, 1, 0],
-               [-2, -1, 1, 1]])
+A = np.matrix([[4, 3],
+               [-4, 3],
+               [1, 0],
+               [1, 0],
+               [0, 1]])
 
-b = np.matrix([[-3, -15]])
-c = [0, -4, 1, 0]
-Jb = [3, 4]
+b = np.matrix([22, 2, -1, 4, 5])
+c = [-5, 4]
+Jb = [1, 2]
 
 
 def dual_simplex_method(A, b, c, Jb):

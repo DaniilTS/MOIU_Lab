@@ -24,38 +24,21 @@ def simplex_method_first_part(A, b):
 
     E = np.identity(m)
     A_extended = np.concatenate((A, E), axis=1)
-
-    print(A_extended)
-
     x = np.concatenate((np.zeros(n), b), axis=0)
-    print('x:', x)
-
     c = np.array([0] * n + [-1] * m)
-    print('c:', c)
-
     artificial_Jb = np.array(range(n + 1, n + m + 1))
-    print('artificial_Jb:', artificial_Jb)
-
     optimal_plan, Jb = simplex_method_second_part(A_extended, b, c, x, artificial_Jb.tolist())
-    print('Optimal plan:', optimal_plan)
-    print('Jb of optimal plan:', Jb)
-
     artificial_Jb = [num - 1 for num in artificial_Jb]
 
     for i in artificial_Jb:
         if optimal_plan[i] != 0:
-            print('Задача несовместна')
-            return
-
-    print('Задача совместна')
+            return None, None, None
 
     size = len(optimal_plan)
-    optimal_plan = np.delete(optimal_plan, range(size - m, size))  # удалили последние m элементов
-    print(optimal_plan)
+    optimal_plan = np.delete(optimal_plan, range(size - m, size))
 
     J = list(range(1, n + 1))
     not_base_indexes = list(set(J) - set(Jb))
-    print('не базисные индексы:', not_base_indexes)
 
     counter = 0
     isTrue, index, j_k = Jb_contains_indexes_more_n(Jb, n)
@@ -84,19 +67,10 @@ def simplex_method_first_part(A, b):
             counter - 1
             break
 
-    return optimal_plan
+    return optimal_plan, Jb, not_base_indexes
 
 
-# print('Оптимальный план:', simplex_method_first_part(A=np.array([[-3., 7., 1, 0., 0.],
-#                                                                  [7., 5., 0., 1., 0.],
-#                                                                  [0., -1., 0., 0., 1.]]),
-#                                                      b=np.array([14., 42., -4.])))
-# VAR 25
-# [[-3., 7., 1, 0., 0.],
-# [14., 42., -4.]
-
-#  VAR 19
-# [[-1., 5., 1., 0., 0.],
-#  [1., 1., 0., 1., 0.],
-#  [0., 6., 1., 1., 0.]]
-# [5., 4., 9.]
+# print(simplex_method_first_part(A=np.array([[-4., 6., 1., 0., 0.],
+#                                             [1., 1., 0., 1., 0.],
+#                                             [0, 0, 0.1, 0.4, -1]]),
+#                        b=np.array([9., 4., 0.5])))
