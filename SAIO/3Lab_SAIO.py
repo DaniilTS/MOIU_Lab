@@ -11,6 +11,7 @@ def resource_allocation_task(A):
 
     x_arr = allocate_resources(x, n, Q)
 
+    x_arr.reverse()
     return x, opt, x_arr
 
 
@@ -46,7 +47,7 @@ def find_best_pair(A, opt, opt_pairs, A_pairs):
         sum = opt_value + A_value
         pairs_sum.append([sum, A_indexes[1]])  # A_indexes[1] - сколько ресурсов отдали последнему агенту
 
-    result = sorted(pairs_sum)  # key - сумма пары
+    result = sorted(pairs_sum)
 
     return result[-1]
 
@@ -71,11 +72,11 @@ def fill_first_row(A, n, Q):
     return x, opt
 
 
-result = resource_allocation_task(A=np.array([[0, 1, 2, 3],
-                                              [0, 0, 1, 2],
-                                              [0, 2, 2, 3]]))
+res = resource_allocation_task(A=np.array([[0, 1, 2, 3],
+                                           [0, 0, 1, 2],
+                                           [0, 2, 2, 3]]))
 
-print('x:\n', result[0])
-print('\nopt:\n', result[1])
-print('\nallocated resources:', result[2])
+print('x:\n', res[0])
+print('\nopt:\n', res[1])
+print('\nallocated resources:', res[2])
 

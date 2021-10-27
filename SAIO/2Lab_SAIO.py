@@ -41,7 +41,6 @@ from SimplexMethod import simplex_first_phase
 def gomori_method_cycle(A, b, A_first_len):
     while True:
         x, Jb, not_Jb = simplex_first_phase(A, b)
-        # x = x[:A.shape[1]]
         if x is None:
             return None
 
@@ -115,7 +114,7 @@ def x_is_suitable(x):
 
 
 result = gomori_method_cycle(A=np.array([[-4., 6., 1., 0.],
-                                             [1., 1., 0., 1.]]),
+                                         [1., 1., 0., 1.]]),
                                  b=np.array([9., 4.]),
                                  A_first_len=4)
 

@@ -55,11 +55,6 @@ def branch_and_bound_method(A, B, c):
 
 
 print('Ответ', branch_and_bound_method(A=np.array([[4, 3],
-                                                   [-4, 3],
-                                                   [-1, 0],
-                                                   [1, 0],
-                                                   [0, 1],
-                                                   [-1, 0],
-                                                   [0, -1]]),
-                                       B=np.array([22, 2, -1, 4, 5, 0, 0]),
+                                                   [-4, 3]]),
+                                       B=np.array([22, 2]),
                                        c=np.array([5, -4])))
